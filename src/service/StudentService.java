@@ -1,5 +1,7 @@
 package service;
 
+import modul.Student;
+
 import java.sql.*;
 
 import static service.Scanner.scanner;
@@ -12,6 +14,8 @@ public class StudentService {
                 "postgres",
                 "1234"
         );
+
+
         System.out.println("Enter student details:");
         System.out.print("ID: ");
          int id = scanner.nextInt();
@@ -24,17 +28,17 @@ public class StudentService {
         int grade = scanner.nextInt();
          scanner.nextLine();
          System.out.print("City: ");
-        String country = scanner.nextLine();
-
+        String city = scanner.nextLine();
+         Student student = new Student(id, name, age, grade, city);//?
          PreparedStatement statement = connection.prepareStatement(
                  "INSERT INTO students (id, name, age, grade, city) VALUES (?, ?, ?, ?, ?)"
          );
 
-         statement.setInt(1, id);
-         statement.setString(2, name);
-         statement.setInt(3, age);
-         statement.setInt(4, grade);
-         statement.setString(5, country);
+         statement.setInt(1, student.getId());
+            statement.setString(2, student.getName());
+            statement.setInt(3, student.getAge());
+            statement.setInt(4, student.getGrade());
+            statement.setString(5, student.getCity());
        if (statement.executeUpdate() == 1) {
            System.out.println("Student added successfully");
        }else {
@@ -44,26 +48,7 @@ public class StudentService {
         connection.close();
     }
 
-   public void ViewAllStudents() throws SQLException {
-         Connection connection=DriverManager.getConnection(
-                 "jdbc:postgresql://localhost:5432/postgres",
-                 "postgres",
-                 "1234"
-         );
-         Statement statement = connection.createStatement();
-         ResultSet rs = statement.executeQuery("SELECT * FROM students");
-         while (rs.next()) {
-             System.out.println("ID: " + rs.getInt("id"));
-             System.out.println("Name: " + rs.getString("name"));
-             System.out.println("Age: " + rs.getInt("age"));
-             System.out.println("Grade: " + rs.getInt("grade"));
-             System.out.println("City: " + rs.getString("city"));
-             System.out.println("-----------------------");
-         }
-         rs.close();
-         statement.close();
-         connection.close();
-   }
+
    public void UpdateStudent() throws SQLException {
        Connection connection=DriverManager.getConnection(
                "jdbc:postgresql://localhost:5432/postgres",
@@ -83,15 +68,16 @@ public class StudentService {
        scanner.nextLine();
        System.out.print("Enter new city: ");
        String city = scanner.nextLine();
+       Student student = new Student(UpdateID, name, age, grade, city);
        PreparedStatement statement = connection.prepareStatement(
                "UPDATE  students SET name=?,age=?,grade=?,city=? WHERE id=?"
        );
 
-       statement.setString(1, name);
-       statement.setInt(2, age);
-       statement.setInt(3, grade);
-       statement.setString(4, city);
-       statement.setInt(5, UpdateID);
+       statement.setString(1, student.getName());
+       statement.setInt(2, student.getAge());
+       statement.setInt(3, student.getGrade());
+       statement.setString(4, student.getCity());
+       statement.setInt(5, student.getId());
         if (statement.executeUpdate() > 0) {
             System.out.println("Student updated successfully.");
         } else {
@@ -122,6 +108,26 @@ public class StudentService {
         statement.close();
         connection.close();
 
+    }
+    public void ViewAllStudents() throws SQLException {
+        Connection connection=DriverManager.getConnection(
+                "jdbc:postgresql://localhost:5432/postgres",
+                "postgres",
+                "1234"
+        );
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM students");
+        while (rs.next()) {
+            System.out.println("ID: " + rs.getInt("id"));
+            System.out.println("Name: " + rs.getString("name"));
+            System.out.println("Age: " + rs.getInt("age"));
+            System.out.println("Grade: " + rs.getInt("grade"));
+            System.out.println("City: " + rs.getString("city"));
+            System.out.println("-----------------------");
+        }
+        rs.close();
+        statement.close();
+        connection.close();
     }
 }
 

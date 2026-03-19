@@ -1,5 +1,8 @@
 import java.sql.SQLException;
 import service.StudentService;
+
+import static service.Scanner.scanner;
+
 public class Main {
     public static void main(String[] args) throws SQLException {
         service.StudentService service = new StudentService();
@@ -11,7 +14,7 @@ public class Main {
             System.out.println("4. Delete Student");
             System.out.println("5. Exit");
 
-             int choice = new java.util.Scanner(System.in).nextInt();
+             int choice = scanner.nextInt();
              switch (choice) {
                  case 1:
                      service.AddStudent();
